@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Slf4j
 @Controller
 public class ArticleController {
@@ -48,13 +50,33 @@ public class ArticleController {
         model.addAttribute("article", articleEntity);
         return "articles/show";
     }
-
     @GetMapping("/articles")
     public String index(Model model){
         List<Article> articleEntityList = articleRepository.findAll();
 
         model.addAttribute("articleList", articleEntityList);
         return "articles/index";
+    }
+    @GetMapping("/articles/{id}/edit")
+    public String edit(@PathVariable Long id, Model model){
+
+        Article articleEntity = articleRepository.findById(id).orElse(null);
+
+        model.addAttribute("article", articleEntity);
+
+        return "articles/edit";
+    }
+    @PostMapping("articles/update")
+    public String update(ArticleForm form){
+
+        Article articleEntity = form.toEntity();
+
+        Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+
+        if(target !=null){
+            articleRepository.save(articleEntity);
+        }
+        return "redirect:/articles/" + articleEntity.getId();
     }
 
 }
