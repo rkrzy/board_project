@@ -14,8 +14,6 @@ import java.util.List;
 
 @RestController
 public class CoffeeApiController {
-    @Autowired
-    private CoffeeRepository coffeeRepository;
 
     @Autowired
     private CoffeeService coffeeService;
